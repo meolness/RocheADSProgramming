@@ -7,6 +7,8 @@
 # ==============================================================================
 
 # Load required libraries
+install.packages("haven")
+library(haven)
 library(admiral)
 library(admiraldev)
 library(dplyr)
@@ -240,7 +242,6 @@ ds_comp <- ds %>%
   mutate(COMPFL = "Y")
 
 adsl <- adsl %>%
-  select(-COMPFL) %>%  # remove old one if it exists
   left_join(ds_comp, by = c("STUDYID", "USUBJID")) %>%
   mutate(COMPFL = if_else(is.na(COMPFL), "N", "Y"))
 
@@ -279,6 +280,9 @@ adsl_final <- adsl %>%
   ) %>%
   arrange(USUBJID)
 
+
+write.csv(adsl_final, "adsl.csv", row.names = FALSE)
+write_xpt(adsl_final, "adsl.xpt")
 
 # ==============================================================================
 #  END OF PROGRAM
